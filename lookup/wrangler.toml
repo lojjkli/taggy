@@ -1,0 +1,39 @@
+name = "klisteam-lookup"
+main = "src/worker.js"
+compatibility_date = "2026-01-01"
+
+[[durable_objects.bindings]]
+name = "REGISTRY"
+class_name = "Registry"
+
+[[durable_objects.bindings]]
+name = "BLACKLIST"
+class_name = "Blacklist"
+
+[[durable_objects.bindings]]
+name = "KICKS"
+class_name = "Kicks"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Registry"]
+
+[[migrations]]
+tag = "v2"
+new_sqlite_classes = ["Blacklist"]
+
+[[migrations]]
+tag = "v3"
+new_sqlite_classes = ["Kicks"]
+
+[[routes]]
+pattern = "api.lojjkli.site"
+custom_domain = true
+
+# One-time setup for the admin page's write access:
+#   wrangler secret put ADMIN_KEY
+# When prompted, type: klitter
+# (Case does not matter - the worker lowercases both sides before comparing.)
+# Only requests carrying this key can add/remove a server, ban a player, or
+# kick one. GET /blacklist, GET /online and GET /kick stay public so the mod
+# itself can read them.

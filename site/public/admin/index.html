@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Admin · lojjkli</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#020202; --card:#111111; --line:#262626; --line-bright:#3C3C3C;
+    --text:#F2F2F2; --dim:#A3A3A3; --faint:#6C6C6C;
+    --green:#22c55e; --red:#ef4444; --amber:#f59e0b;
+    --display:'Space Grotesk',sans-serif; --body:'Inter',sans-serif; --mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--void);color:var(--text);font:15px/1.6 var(--body)}
+  .wrap{max-width:720px;margin:0 auto;padding:56px 24px 80px}
+  h1{font:600 26px/1.1 var(--display);margin:0 0 4px}
+  .sub{color:var(--faint);font-size:13px;margin:0 0 28px}
+  h2{font:600 15px var(--display);margin:0 0 14px;color:var(--dim)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:20px}
+  label{display:block;color:var(--faint);font:500 11px var(--mono);letter-spacing:.1em;
+        text-transform:uppercase;margin-bottom:8px}
+  input{width:100%;background:#0A0A0A;border:1px solid var(--line);border-radius:8px;
+        color:var(--text);padding:10px 12px;font:14px var(--mono)}
+  .row{display:flex;gap:10px}
+  .row>div{flex:1}
+  button{background:var(--text);border:0;border-radius:8px;color:var(--void);
+         padding:9px 16px;font:600 13px var(--body);cursor:pointer;white-space:nowrap}
+  button.danger{background:var(--red);color:#fff}
+  button.warn{background:var(--amber);color:#1a1204}
+  button.ghost{background:transparent;color:var(--dim);border:1px solid var(--line-bright)}
+  table{width:100%;border-collapse:collapse;margin-top:4px}
+  td{padding:8px;border-bottom:1px solid var(--line);font:13px var(--mono);vertical-align:middle}
+  td.who{display:flex;align-items:center;gap:9px;font-weight:500;border-bottom:none}
+  td.reason,td.time{color:var(--dim)}
+  td.btns{text-align:right;width:1%;white-space:nowrap}
+  td.btns button{margin-left:6px}
+  tr{border-bottom:1px solid var(--line)}
+  .head{width:22px;height:22px;border-radius:5px;image-rendering:pixelated;
+        background:#0A0A0A;border:1px solid var(--line);flex:none}
+  #msg{font:13px var(--mono);color:var(--dim);min-height:18px;margin-top:10px}
+  .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);
+       margin-right:2px;box-shadow:0 0 6px var(--green);flex:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>KlisTeamMod admin</h1>
+  <p class="sub">Server blacklist, player bans, and who is currently using the mod.</p>
+
+  <div class="card">
+    <label for="key">Admin key</label>
+    <input id="key" type="password" placeholder="set once with: wrangler secret put ADMIN_KEY"
+           autocomplete="off">
+    <div id="msg"></div>
+  </div>
+
+  <div class="card">
+    <h2>Blocked servers</h2>
+    <div class="row">
+      <div><input id="server" placeholder="play.example.com"></div>
+      <div><input id="serverReason" placeholder="reason (optional)"></div>
+      <div style="flex:0 0 auto"><button onclick="addServer()">Block</button></div>
+    </div>
+    <table id="serverList"><tbody></tbody></table>
+  </div>
+
+  <div class="card">
+    <h2>Banned players</h2>
+    <div class="row">
+      <div><input id="player" placeholder="username"></div>
+      <div><input id="playerReason" placeholder="reason (optional)"></div>
+      <div style="flex:0 0 auto"><button class="danger" onclick="addPlayer()">Ban</button></div>
+    </div>
+    <table id="playerList"><tbody></tbody></table>
+  </div>
+
+  <div class="card">
+    <h2>Using the mod right now <span style="color:var(--faint);font-weight:400">(last 5 min)</span></h2>
+    <table id="onlineList"><tbody></tbody></table>
+  </div>
+</div>
+
+<script>
+const API = 'https://api.lojjkli.site';
+const $ = id => document.getElementById(id);
+const esc = s => String(s || '').replace(/[<>&]/g, '');
+const safeName = s => String(s || '').replace(/[^A-Za-z0-9_]/g, '');
+const head = name => `<img class="head" alt="" loading="lazy"
+  src="https://mc-heads.net/avatar/${safeName(name)}/24"
+  onerror="this.onerror=null;this.src='https://crafatar.com/avatars/${safeName(name)}?size=24&overlay'">`;
+
+async function refreshBlacklist() {
+  const r = await fetch(`${API}/blacklist`);
+  const d = await r.json();
+
+  $('serverList').querySelector('tbody').innerHTML =
+    (d.detail || []).filter(x => x.kind === 'server').map(row => `
+      <tr>
+        <td>${esc(row.value)}</td>
+        <td class="reason">${esc(row.reason)}</td>
+        <td class="btns"><button class="ghost" onclick="remove('server','${row.value.replace(/'/g,'')}')">Remove</button></td>
+      </tr>`).join('') || '<tr><td class="reason">No servers blocked</td></tr>';
+
+  $('playerList').querySelector('tbody').innerHTML =
+    (d.detail || []).filter(x => x.kind === 'player').map(row => `
+      <tr>
+        <td class="who">${head(row.display)}${esc(row.display)}</td>
+        <td class="reason">${esc(row.reason)}</td>
+        <td class="btns">
+          <button class="warn" onclick="kick('${row.display.replace(/'/g,'')}')">Kick</button>
+          <button class="ghost" onclick="remove('player','${row.value.replace(/'/g,'')}')">Unban</button>
+        </td>
+      </tr>`).join('') || '<tr><td class="reason">Nobody banned</td></tr>';
+}
+
+async function refreshOnline() {
+  const r = await fetch(`${API}/online?minutes=5`);
+  const d = await r.json();
+  $('onlineList').querySelector('tbody').innerHTML =
+    (d.players || []).map(p => `
+      <tr>
+        <td class="who"><span class="dot"></span>${head(p.name)}${esc(p.name)}</td>
+        <td class="time">${Math.max(0, Math.round((Date.now() - p.last) / 1000))}s ago</td>
+        <td class="btns">
+          <button class="warn" onclick="kick('${p.name.replace(/'/g,'')}')">Kick</button>
+          <button class="danger" onclick="banFromOnline('${p.name.replace(/'/g,'')}')">Ban</button>
+        </td>
+      </tr>`).join('') || '<tr><td class="reason">Nobody currently active</td></tr>';
+}
+
+async function write(kind, value, reason, method) {
+  const key = $('key').value.trim();
+  if (!key) { $('msg').textContent = 'Enter the admin key first.'; return false; }
+  if (!value) { $('msg').textContent = 'Nothing entered.'; return false; }
+  const q = `kind=${encodeURIComponent(kind)}&value=${encodeURIComponent(value)}`
+          + (reason ? `&reason=${encodeURIComponent(reason)}` : '');
+  const r = await fetch(`${API}/blacklist?${q}`, { method, headers: { 'x-admin-key': key } });
+  $('msg').textContent = r.ok ? 'Saved.' : 'Failed - check the admin key.';
+  return r.ok;
+}
+
+async function kick(name) {
+  const key = $('key').value.trim();
+  if (!key) { $('msg').textContent = 'Enter the admin key first.'; return; }
+  // Only disconnects them from whatever server they are on right now - it does
+  // not ban them. Their mod notices within ~20 seconds.
+  const r = await fetch(`${API}/kick?name=${encodeURIComponent(name)}`,
+    { method: 'POST', headers: { 'x-admin-key': key } });
+  $('msg').textContent = r.ok ? `Kick sent for ${name} - takes effect within ~20s.`
+                               : 'Failed - check the admin key.';
+}
+
+async function addServer() {
+  const v = $('server').value.trim().toLowerCase();
+  if (await write('server', v, $('serverReason').value.trim(), 'POST')) {
+    $('server').value = ''; $('serverReason').value = ''; refreshBlacklist();
+  }
+}
+async function addPlayer() {
+  const v = $('player').value.trim();
+  if (await write('player', v, $('playerReason').value.trim(), 'POST')) {
+    $('player').value = ''; $('playerReason').value = ''; refreshBlacklist();
+  }
+}
+async function banFromOnline(name) {
+  if (await write('player', name, 'banned from online list', 'POST')) refreshBlacklist();
+}
+async function remove(kind, value) {
+  if (await write(kind, value, '', 'DELETE')) refreshBlacklist();
+}
+
+refreshBlacklist();
+refreshOnline();
+setInterval(refreshOnline, 15000);
+</script>
+</body>
+</html>
