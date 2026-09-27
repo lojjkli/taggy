@@ -36,9 +36,9 @@
   <nav><a href="index.html">Home</a> <a href="terms.html">Terms of Service</a></nav>
 
   <h1>Privacy Policy</h1>
-  <p class="muted">Last updated: August 7, 2026</p>
+  <p class="muted">Last updated: September 27, 2026</p>
 
-  <p>This Privacy Policy explains how Taggy ("Taggy", "the Bot", "we", "us", or "our") accesses, uses, stores, and shares information when Taggy is used on Discord. Taggy is operated from Switzerland. Questions and privacy requests can be sent to <a href="mailto:zzzzzworks@gmail.com">zzzzzworks@gmail.com</a>.</p>
+  <p>This Privacy Policy explains how Taggy ("Taggy", "the Bot", "we", "us", or "our") accesses, uses, stores, and shares information when Taggy is used on Discord and for Roblox account verification. Taggy is operated from Switzerland. Questions and privacy requests can be sent to <a href="mailto:zzzzzworks@gmail.com">zzzzzworks@gmail.com</a>.</p>
 
   <h2>1. Information Taggy Accesses or Processes</h2>
   <p>Depending on the feature being used and the permissions granted to Taggy, the Bot may access or process:</p>
@@ -48,6 +48,8 @@
     <li>Server and channel information needed to perform moderation and configuration commands.</li>
     <li>Commands, interactions, and message-event information needed to respond to commands or operate moderation features. Text supplied to a command may be processed temporarily so Taggy can perform the requested action.</li>
     <li>Giveaway information, such as giveaway identifiers, timing, entrants or winner identifiers where needed, and active giveaway state.</li>
+    <li>When you choose Roblox verification, your Roblox user ID, username, and display name. The "Verify with Roblox" option uses the <code>openid</code> and <code>profile</code> permissions to obtain this basic identity information after you approve the Roblox consent screen. The profile-code and in-game hub methods also use basic Roblox identity information to verify your account.</li>
+    <li>Messages and attachment names or links in support tickets when staff provide assistance or a ticket is closed.</li>
   </ul>
 
   <h2>2. Information Taggy Stores</h2>
@@ -58,11 +60,13 @@
     <li>Trap channel IDs.</li>
     <li>Configured administrator and member role IDs.</li>
     <li>Discord identifiers associated with the items above when needed for the feature to work.</li>
+    <li>Roblox and Discord account identifiers and Roblox usernames or display names needed to maintain an account link and the Member role.</li>
+    <li>Ticket ownership, status, staff actions, close reasons, and transcript files in a staff-only Discord logs channel.</li>
   </ul>
-  <p>Taggy does not intentionally request or collect passwords, Discord account tokens, payment-card information, home addresses, or other sensitive credentials.</p>
+  <p>Roblox OAuth access tokens are used to complete verification and are not stored as account links. Taggy does not intentionally request or collect passwords, Discord account tokens, payment-card information, home addresses, or other sensitive credentials.</p>
 
   <h2>3. How We Use Information</h2>
-  <p>We use information only as reasonably necessary to provide, secure, maintain, and troubleshoot Taggy's stated features, including moderation, server configuration, ranks and teams, giveaways, trap channels, information commands, and responding to user interactions.</p>
+  <p>We use information only as reasonably necessary to provide, secure, maintain, and troubleshoot Taggy's stated features, including moderation, server configuration, ranks and teams, giveaways, trap channels, information commands, support tickets, Roblox-to-Discord account linking, Member role assignment, and responding to user interactions.</p>
 
   <h2>4. Legal Basis Where Applicable</h2>
   <p>Where applicable law requires a legal basis for processing, we process information as necessary to provide the features requested by users or server administrators, for legitimate interests such as operating and securing Taggy, or with consent where consent is required.</p>
@@ -71,13 +75,15 @@
   <p>We do not sell Discord API data or personal information. Information may be shared only:</p>
   <ul>
     <li>With Discord as necessary to use Discord's platform and APIs.</li>
+    <li>With Roblox as necessary to run the authorization flow and obtain the basic identity information you approve.</li>
+    <li>With authorized server staff through private ticket channels and staff-only logs, including transcript files created when tickets close.</li>
     <li>With service providers used to host, secure, or operate Taggy, only as needed to provide those services.</li>
     <li>When required by applicable law or a valid legal process.</li>
     <li>When a user or authorized server administrator expressly directs Taggy to perform an action that requires sharing information within Discord.</li>
   </ul>
 
   <h2>6. Data Retention and Deletion</h2>
-  <p>We retain stored information only for as long as reasonably necessary for Taggy's stated functionality, security, or legal obligations. Active giveaway data may be removed after the giveaway no longer requires it. Server configuration, rank, team, and moderation configuration data may be retained while needed for that server.</p>
+  <p>We retain stored information only for as long as reasonably necessary for Taggy's stated functionality, security, or legal obligations. Active giveaway data may be removed after the giveaway no longer requires it. Server configuration, rank, team, and moderation configuration data may be retained while needed for that server. Roblox-to-Discord account links are retained while verification is active or until the link is removed. Ticket transcript files posted to the staff-only logs channel are scheduled for deletion after 30 days. Transcript files contain message text, embed text, and attachment names or links, but do not copy the attachment files. The original ticket channel and its conversation are not automatically deleted when the transcript expires and may remain until authorized staff remove them.</p>
   <p>Users may request deletion of personal data linked to their Discord account, and server owners or authorized administrators may request deletion of stored server data, by emailing <a href="mailto:zzzzzworks@gmail.com">zzzzzworks@gmail.com</a>. We may ask for reasonable verification before acting on a request. We will delete data when it is no longer necessary for Taggy's stated functionality or when deletion is otherwise required.</p>
 
   <h2>7. International Processing</h2>
@@ -93,7 +99,7 @@
   <p>We use reasonable measures to protect information handled by Taggy. No online service can guarantee absolute security. If we become aware of unauthorized access requiring notification under applicable law or Discord's rules, we will take appropriate steps.</p>
 
   <h2>11. Discord</h2>
-  <p>Taggy is a third-party application and is not operated or endorsed by Discord. Use of Discord is also governed by Discord's own terms and privacy policy.</p>
+  <p>Taggy is a third-party application and is not operated or endorsed by Discord or Roblox. Use of those platforms is also governed by their own terms and privacy policies.</p>
 
   <h2>12. Changes to This Policy</h2>
   <p>We may update this Privacy Policy when Taggy's features, data practices, or legal obligations change. The updated version will be posted here with a revised "Last updated" date.</p>
