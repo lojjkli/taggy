@@ -7,7 +7,7 @@ Public Privacy Policy and Terms of Service for TAGGY's Discord bot, fishing app 
 - `terms.html`: usage rules, server management, tickets, verification, security and fishing.
 - `legal.css`: shared responsive styling and print layout. No external scripts, fonts, images or cookies.
 
-Contact: **zzzzzworks@gmail.com**. Last updated: **October 4, 2026**.
+Contact: **zzzzzworks@gmail.com**. Last updated: **October 8, 2026**.
 
 ## Publish
 
@@ -41,3 +41,5 @@ The bot code alone does not prove encryption of hosting disks/backups or establi
 - [Swiss FDPIC guidance on cross-border transfers](https://www.edoeb.admin.ch/en/cross-border-transfer-of-personal-data)
 
 These source links support drafting and maintenance. The pages describe TAGGY's actual behavior; they do not certify every legal or hosting requirement has been satisfied.
+
+Dish washing, added 8 October 2026, has separate game state. Include washing-state.json when fulfilling game-profile data or deletion requests. Dish washing rankings show Discord IDs/mentions and cleaning totals; the privacy policy and terms cover these uses.
